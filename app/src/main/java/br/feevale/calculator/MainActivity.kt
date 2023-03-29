@@ -9,17 +9,22 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    var value: String = "0"
-    val displayText1: TextView = findViewById(R.id.display_text)
+    var value: String = ""
+    val displayText: TextView = findViewById(R.id.display_text)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
-    fun buttonClickValue(button: View){
-        val button: Button = button as Button
+    fun buttonClickValue(view: View){
+        val button: Button = view as Button
         value += button.text
-        Log.d("TextButton", "${button.text.toString()} - ${displayText1.text} - ${value}")
+        Log.d("TextButton", "${button.text} - ${displayText.text} - ${value}")
+        displayText.text = value
+    }
+
+    fun getResult(view: View){
+
     }
 }
