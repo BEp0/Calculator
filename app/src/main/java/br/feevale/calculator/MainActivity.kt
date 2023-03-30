@@ -9,8 +9,9 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    var value: String = ""
+    var expression: String = ""
     var displayText: TextView? = null
+    var calculate = Calculate()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,23 +21,25 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonClickValue(view: View){
         val button: Button = view as Button
-        value += button.text
-        Log.d("TextButton", "${button.text} - ${displayText?.text} - ${value}")
-        displayText?.text = value
+
+        if(listOf("+", "-", "*", "/").contains(button.text)){
+            expression += " ${button.text} "
+        } else {
+            expression += button.text
+        }
+        Log.d("RESPONSE", expression)
+        displayText?.text = expression
     }
 
     fun getResult(view: View){
-        /**
-         * pegar o value
-         * exemplo -> 23 + 23 - 4
-         *      vai ter um split passando depois um for com when onde vai
-         *      iterar sobre um valor e setar o displayText no final
-         */
-
+        val response = calculate.calculate(expression)
+        Log.d("RESPONSE", response)
+        expression = response
+        displayText?.setText(response)
     }
 
     fun clearResult(view: View){
-        value = ""
+        expression = ""
         displayText?.setText("0")
     }
 }
