@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import br.feevale.calculator.OperationUtils.Companion.isOperation
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,26 +19,37 @@ class MainActivity : AppCompatActivity() {
         displayText = findViewById(R.id.display_text) as TextView
     }
 
-    fun buttonClickValue(view: View){
+    fun buttonClickValue(view: View) {
         val button: Button = view as Button
+
+        val buttonText = button.text.toString()
+
         // TODO: não deixar dividir por zero,
+//        if (checkDivByZero(buttonText)){
+//            throw java.lang.RuntimeException
+//        }
         //  não deixar fazer algo assim: .2 * 2 (.2 esta errado)
-        if(OperationUtils.isOperation(button.text.toString())){
-            expression += " ${button.text} "
+//        if (checkDot(buttonText)){
+//            throw java.lang.RuntimeException
+//        }
+        expression += if (isOperation(buttonText)) {
+            " $buttonText "
         } else {
-            expression += button.text
+            buttonText
         }
         displayText?.text = expression
     }
 
-    fun getResult(view: View){
-        val response = calculate.calculate(expression)
+//    private fun checkDot(buttonText: String) = buttonText == "." && expression.isBlank()
+
+    fun getResult(view: View) {
+        val response = calculate.execute(expression)
         expression = response
-        displayText?.setText(response)
+        displayText?.text = response
     }
 
-    fun clearResult(view: View){
+    fun clearResult(view: View) {
         expression = ""
-        displayText?.setText("0")
+        displayText?.text = "0"
     }
 }

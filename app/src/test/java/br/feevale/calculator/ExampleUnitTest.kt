@@ -1,5 +1,6 @@
 package br.feevale.calculator
 
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -15,83 +16,47 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun `testa a funcionalidade de aplicar o padrão correto da expressão passada`() {
-
-        val expressao = "2.0 + 1.0 * 5"
-        val lista = expressao.split(" ")
-        if (lista.contains("*") || lista.contains("/")) {
-
-            val valueToReplace = "?"
-
-            println("realiza a multiplicação primeiro")
-
-            val pattern = "\\d+(\\.\\d+)?(\\s*[\\/*]\\s*\\d+(\\.\\d+)?)+".toRegex()
-            val matches = pattern.findAll(expressao)
-            val replaced = expressao.replace(pattern, valueToReplace)
-
-            val matchesResolved = matches.map { applyResult(it.value) }
-
-            matchesResolved.forEach { println(it) }
-            println(replaced)
-
-            val replacedWithResults = replaceValues(replaced, matchesResolved.toList())
-            println(replacedWithResults)
-
-            val aplicarOperacoesSimples = aplicarOperacoesSimples(replacedWithResults)
-            println(aplicarOperacoesSimples)
-
-        } else {
-            val aplicarOperacoesSimples = aplicarOperacoesSimples(expressao)
-            println(aplicarOperacoesSimples)
-        }
-
+    fun `testa calculadora com as quatro operações`() {
+        val calculate = Calculate()
+        val expected = "5.0"
+        val expression = "4 * 2 + 2 / 2 - 4"
+        val response = calculate.execute(expression)
+        assertEquals(expected, response)
     }
 
-    private fun aplicarOperacoesSimples(replacedWithResults: String): String{
-        var response = 0.0
-        var operation: Operation? = null
-        val split = replacedWithResults.split(" ")
-        split.forEach {
-            if (!isOperation(it)){
-                if (operation == null){
-                    response = response.plus(it.toDouble())
-                } else {
-                    response = operation!!.apply(response, it.toDouble())
-                }
-            } else {
-                operation = getOperation(it)
-            }
-        }
-
-        return response.toString()
+    @Test
+    fun `testa calculadora com as soma e subtração`() {
+        val calculate = Calculate()
+        val expected = "0.0"
+        val expression = "2 + 2 - 4"
+        val response = calculate.execute(expression)
+        assertEquals(expected, response)
     }
 
-    private fun isOperation(value: String) = listOf("+", "-", "*", "/").contains(value)
-
-    private fun replaceValues(expressao: String, valores: List<String>): String {
-            var resultado = expressao
-            valores.forEachIndexed { index, valor ->
-                resultado = resultado.replaceFirst("?", valor)
-            }
-            return resultado
+    @Test
+    fun `testa ponto flutuante`() {
+        val calculate = Calculate()
+        val expected = "5.2"
+        val expression = "2 + .2 + 3"
+        val response = calculate.execute(expression)
+        assertEquals(expected, response)
     }
 
-    private fun applyResult(expressao: String): String {
-        if (expressao.contains(Operation.MULT.type)) {
-            val respostaDaOperacao = Operation.MULT.apply(expressao)
-            return respostaDaOperacao.toString()
-        } else if (expressao.contains(Operation.DIV.type)) {
-            val respostaDaOperacao = Operation.DIV.apply(expressao)
-            return respostaDaOperacao.toString()
-        }
-        return ""
+    @Test
+    fun `testa calculadora contra divisões por zero`() {
+        val calculate = Calculate()
+        val expected = "0.0"
+        val expression = "2 / 0"
+        val response = calculate.execute(expression)
+        assertEquals(expected, response)
     }
 
-    private fun getOperation(it: String): Operation? = when (it) {
-        "+" -> Operation.SUM
-        "-" -> Operation.SUB
-        "/" -> Operation.DIV
-        "*" -> Operation.MULT
-        else -> null
+    @Test
+    fun `testa calculadora contra adição de dois ponto flutuante`() {
+        val calculate = Calculate()
+        val expected = "0.0"
+        val expression = "2 + 0.2.2 + 3"
+        val response = calculate.execute(expression)
+        assertEquals(expected, response)
     }
 }
