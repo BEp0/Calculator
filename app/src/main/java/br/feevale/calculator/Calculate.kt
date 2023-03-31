@@ -5,41 +5,28 @@ import br.feevale.calculator.OperationUtils.Companion.getOperation
 class Calculate {
 
     fun calculate(expression: String): String{
+        val expressionSplited = expression.split(" ")
 
-        val lista = expression.split(" ")
-        if (lista.contains("*") || lista.contains("/")) {
-
-            val valueToReplace = "?"
-
-            println("realiza a multiplicação primeiro")
-
-            val pattern = "\\d+(\\.\\d+)?(\\s*[\\/*]\\s*\\d+(\\.\\d+)?)+".toRegex()
-            val matches = pattern.findAll(expression)
-            val replaced = expression.replace(pattern, valueToReplace)
-
-            val matchesResolved = matches.map { applyResult(it.value) }
-
-            matchesResolved.forEach { println(it) }
-            println(replaced)
-
-            val replacedWithResults = replaceValues(replaced, matchesResolved.toList())
-            println(replacedWithResults)
-
-            val aplicarOperacoesSimples = aplicarOperacoesSimples(replacedWithResults)
-            println(aplicarOperacoesSimples)
-
-            return aplicarOperacoesSimples
-
+        if(isNotMultOrDiv(expressionSplited)) {
+            return applySimpleOperation(expression)
         }
 
-        val aplicarOperacoesSimples = aplicarOperacoesSimples(expression)
-        println(aplicarOperacoesSimples)
-
-        return aplicarOperacoesSimples
+        return applyComplexOperation(expression)
     }
 
+    private fun applyComplexOperation(expression: String): String {
 
-    private fun isOperation(value: String) = listOf("+", "-", "*", "/").contains(value)
+        val valueToReplace = "?"
+        val pattern = "\\d+(\\.\\d+)?(\\s*[\\/*]\\s*\\d+(\\.\\d+)?)+".toRegex()
+        val matches = pattern.findAll(expression)
+        val replaced = expression.replace(pattern, valueToReplace)
+        val matchesResolved = matches.map { applyResult(it.value) }
+
+        val replacedWithResults = replaceValues(replaced, matchesResolved.toList())
+        return  applySimpleOperation(replacedWithResults)
+    }
+
+    private fun isNotMultOrDiv(expressionSplited: List<String>) = !(expressionSplited.contains("*") || expressionSplited.contains("/"))
 
     private fun replaceValues(expressao: String, valores: List<String>): String {
         var resultado = expressao
@@ -49,23 +36,29 @@ class Calculate {
         return resultado
     }
 
-    private fun aplicarOperacoesSimples(replacedWithResults: String): String {
+    private fun applySimpleOperation(replacedWithResults: String): String {
         var response = 0.0
         var operation: Operation? = null
         val split = replacedWithResults.split(" ")
         split.forEach {
-            if (!isOperation(it)) {
-                if (operation == null) {
-                    response = response.plus(it.toDouble())
-                } else {
-                    response = operation!!.apply(response, it.toDouble())
-                }
-            } else {
+            if (OperationUtils.isOperation(it)) {
                 operation = getOperation(it)
+            } else {
+                response = executeOperation(operation, response, it)
             }
         }
 
         return response.toString()
+    }
+
+    private fun executeOperation(
+        operation: Operation?,
+        response: Double,
+        it: String
+    ) = if (operation == null) {
+        response.plus(it.toDouble())
+    } else {
+        operation!!.apply(response, it.toDouble())
     }
 
     private fun applyResult(expressao: String): String {

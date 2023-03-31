@@ -2,7 +2,6 @@ package br.feevale.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -21,19 +20,18 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonClickValue(view: View){
         val button: Button = view as Button
-
-        if(listOf("+", "-", "*", "/").contains(button.text)){
+        // TODO: não deixar dividir por zero,
+        //  não deixar fazer algo assim: .2 * 2 (.2 esta errado)
+        if(OperationUtils.isOperation(button.text.toString())){
             expression += " ${button.text} "
         } else {
             expression += button.text
         }
-        Log.d("RESPONSE", expression)
         displayText?.text = expression
     }
 
     fun getResult(view: View){
         val response = calculate.calculate(expression)
-        Log.d("RESPONSE", response)
         expression = response
         displayText?.setText(response)
     }
