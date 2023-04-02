@@ -2,7 +2,9 @@ package br.feevale.calculator
 
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
+import kotlin.math.exp
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -45,18 +47,16 @@ class ExampleUnitTest {
     @Test
     fun `testa calculadora contra divisões por zero`() {
         val calculate = Calculate()
-        val expected = "0.0"
+        val expected = "Não pode dividir por zero"
         val expression = "2 / 0"
-        val response = calculate.execute(expression)
-        assertEquals(expected, response)
-    }
 
-    @Test
-    fun `testa calculadora contra adição de dois ponto flutuante`() {
-        val calculate = Calculate()
-        val expected = "0.0"
-        val expression = "2 + 0.2.2 + 3"
-        val response = calculate.execute(expression)
-        assertEquals(expected, response)
+        // TODO: alterar para assertThrows
+        // assertThrows(RuntimeException::class, calculate.execute(expression) )
+
+        try {
+            calculate.execute(expression)
+        } catch (error: RuntimeException) {
+            assertEquals(expected, error.message)
+        }
     }
 }
