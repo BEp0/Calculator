@@ -1,20 +1,19 @@
 package br.feevale.calculator
 
-class OperationUtils {
+class Operation {
 
     companion object {
         fun isOperation(value: String) = listOf("+", "-", "*", "/").contains(value.trim())
-        fun getOperation(it: String): Operation? = when (it) {
-            "+" -> Operation.SUM
-            "-" -> Operation.SUB
-            "/" -> Operation.DIV
-            "*" -> Operation.MULT
+    }
+
+    private fun getOperation(operationType: String): OperationEnum? =
+        when (operationType) {
+            OperationEnum.SUM.type -> OperationEnum.SUM
+            OperationEnum.SUB.type -> OperationEnum.SUB
+            OperationEnum.DIV.type -> OperationEnum.DIV
+            OperationEnum.MULT.type -> OperationEnum.MULT
             else -> null
         }
-
-        fun isMultOrDiv(expression: String) =
-            expression.contains("*") || expression.contains("/")
-    }
 
     private fun mountExpression(expression: String, values: List<String>): String {
         var expressionMounted = expression
@@ -25,10 +24,10 @@ class OperationUtils {
     }
 
     private fun applyMultOrDivResult(expression: String): String {
-        return if (expression.contains(Operation.MULT.type)){
-            Operation.MULT.apply(expression).toString()
+        return if (expression.contains(OperationEnum.MULT.type)) {
+            OperationEnum.MULT.apply(expression).toString()
         } else {
-            Operation.DIV.apply(expression).toString()
+            OperationEnum.DIV.apply(expression).toString()
         }
     }
 
@@ -47,19 +46,26 @@ class OperationUtils {
 
     fun applySimpleOperation(expression: String): String {
         var response = 0.0
-        var operation: Operation? = null
+        var operationEnum: OperationEnum? = null
         val split = expression.split(" ")
         split.forEach {
-            if (OperationUtils.isOperation(it)) {
-                operation = getOperation(it)
+            if (isOperation(it)) {
+                operationEnum = getOperation(it)
             } else {
-                if (operation == null) {
+                if (operationEnum == null) {
                     response = response.plus(it.toDouble())
                 } else {
-                    response = operation!!.apply(response, it.toDouble())
+                    response = operationEnum!!.apply(response, it.toDouble())
                 }
             }
         }
-        return response.toString()
+        return formatResponse(response.toString())
+    }
+
+    private fun formatResponse(response: String): String {
+        return if (!response.contains(".0"))
+            response
+        else
+            response.replace(".0", "")
     }
 }

@@ -1,15 +1,15 @@
 package br.feevale.calculator
 
-import br.feevale.calculator.OperationUtils.Companion.getOperation
-import br.feevale.calculator.OperationUtils.Companion.isMultOrDiv
-
 class Calculate {
 
     fun execute(expression: String): String {
-        val operationUtils = OperationUtils()
+        val operation = Operation()
         if (isMultOrDiv(expression)) {
-            return operationUtils.applyComplexOperation(expression)
+            return operation.applyComplexOperation(expression)
         }
-        return operationUtils.applySimpleOperation(expression)
+        return operation.applySimpleOperation(expression)
     }
+
+    private fun isMultOrDiv(expression: String) =
+        expression.contains("*") || expression.contains("/")
 }
