@@ -1,5 +1,6 @@
 package br.feevale.calculator
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     var displayText: TextView? = null
     var textError: TextView? = null
     var calculate = Calculate()
+    val expressions = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     fun getResult(view: View) {
         try {
             val response = calculate.execute(expression)
+            expressions.add("$expression = $response")
             expression = response
             displayText?.text = response
             textError?.text = ""
@@ -58,6 +61,14 @@ class MainActivity : AppCompatActivity() {
         displayText?.text = "0"
         textError?.text = ""
     }
+
+    fun getHistoryActivity(view: View) {
+        val intent = Intent(baseContext, HistoryActivity::class.java)
+        intent.putExtra("CALCULATOR", expressions)
+
+        startActivity(intent)
+    }
+
 }
 
 

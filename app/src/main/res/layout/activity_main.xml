@@ -238,6 +238,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="200dp"
+        android:onClick="getHistoryActivity"
         android:text="@string/history_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_clear2"
