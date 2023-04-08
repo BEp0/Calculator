@@ -20,4 +20,5 @@
     <string name="eight_text">8</string>
     <string name="textError"></string>
     <string name="back_button">Back</string>
+    <string name="history_result_text"></string>
 </resources>

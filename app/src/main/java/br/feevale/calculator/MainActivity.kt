@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        displayText = findViewById<TextView>(R.id.display_text)
-        textError = findViewById<TextView>(R.id.text_error)
+        displayText = findViewById(R.id.display_text)
+        textError = findViewById(R.id.text_error)
     }
 
     fun buttonClickValue(view: View) {
@@ -65,7 +65,6 @@ class MainActivity : AppCompatActivity() {
     fun getHistoryActivity(view: View) {
         val intent = Intent(baseContext, HistoryActivity::class.java)
         intent.putExtra("CALCULATOR", expressions)
-
         startActivity(intent)
     }
 

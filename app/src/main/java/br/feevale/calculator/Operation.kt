@@ -32,7 +32,6 @@ class Operation {
     }
 
     fun applyComplexOperation(expression: String): String {
-
         val valueToReplace = "?"
         val multiplyAndDivOperationsPattern =
             "\\d+(\\.\\d+)?(\\s*[\\/*]\\s*\\d+(\\.\\d+)?)+".toRegex()

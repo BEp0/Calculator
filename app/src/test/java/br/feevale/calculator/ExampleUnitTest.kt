@@ -50,13 +50,10 @@ class ExampleUnitTest {
         val expected = "Não pode dividir por zero"
         val expression = "2 / 0"
 
-        // TODO: alterar para assertThrows
-        // assertThrows(RuntimeException::class, calculate.execute(expression) )
-
-        try {
+        val exception = assertThrows(RuntimeException::class.java) {
             calculate.execute(expression)
-        } catch (error: RuntimeException) {
-            assertEquals(expected, error.message)
         }
+
+        assertEquals(expected, exception.message)
     }
 }
