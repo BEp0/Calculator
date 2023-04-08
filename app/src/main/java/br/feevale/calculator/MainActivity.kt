@@ -51,14 +51,18 @@ class MainActivity : AppCompatActivity() {
             textError?.text = ""
         } catch (error: RuntimeException) {
             expression = ""
-            displayText?.text = "0"
+            displayText?.text = ""
             textError?.text = error.message
         }
     }
 
     fun clearResult(view: View) {
-        expression = ""
-        displayText?.text = "0"
+        val expressionSubstring = when(expression.length){
+            0 -> expression
+            else -> expression.substring(0, expression.length - 1)
+        }
+        expression = expressionSubstring
+        displayText?.text = expressionSubstring
         textError?.text = ""
     }
 
@@ -67,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("CALCULATOR", expressions)
         startActivity(intent)
     }
-
 }
 
 
