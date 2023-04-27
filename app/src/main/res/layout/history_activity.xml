@@ -38,11 +38,12 @@
 
             <TextView
                 android:id="@+id/historyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="47dp"
                 android:text="@string/history_text"
+                android:textAlignment="textEnd"
                 android:textSize="34sp"
                 app:layout_constraintBottom_toTopOf="@+id/button"
                 app:layout_constraintEnd_toEndOf="@+id/scrollView2"
