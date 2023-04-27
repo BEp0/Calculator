@@ -6,14 +6,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import br.feevale.calculator.Operation.Companion.isOperation
 
 class MainActivity : AppCompatActivity() {
 
     var expression: String = ""
     var displayText: TextView? = null
     var textError: TextView? = null
-    var calculate = Calculate()
+    val operation = Operation()
     val expressions = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,27 +23,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonClickValue(view: View) {
-        val button: Button = view as Button
 
+        val button: Button = view as Button
         val buttonText = button.text.toString()
 
-        if (hasDot(buttonText))
-            return
+        if (hasDot(buttonText)) return
+        if (hasOperation(buttonText)) return
 
-        expression += if (isOperation(buttonText)) " $buttonText "
+        expression += if (operation.isOperation(buttonText)) " $buttonText "
         else buttonText
-
         displayText?.text = expression
+    }
+
+    private fun hasOperation(buttonText: String): Boolean {
+        return operation.isOperation(buttonText) && (
+                expression.contains(OperationEnum.SUM.type) ||
+                expression.contains(OperationEnum.SUB.type) ||
+                expression.contains(OperationEnum.MULT.type) ||
+                expression.contains(OperationEnum.DIV.type)
+        )
     }
 
     private fun hasDot(buttonText: String): Boolean {
         val expressionSplit = expression.split(" ")
-        return buttonText == "." && expression.contains(".") && expressionSplit[expressionSplit.size - 1].contains(".")
+        return buttonText == "." && expression.contains(".") && expressionSplit[expressionSplit.size - 1].contains(
+            "."
+        )
     }
 
     fun getResult(view: View) {
         try {
-            val response = calculate.execute(expression)
+            val response = operation.execute(expression)
             expressions.add("$expression = $response")
             expression = response
             displayText?.text = response
@@ -57,12 +66,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clearResult(view: View) {
-        val expressionSubstring = when(expression.length){
-            0 -> expression
-            else -> expression.substring(0, expression.length - 1)
-        }
-        expression = expressionSubstring
-        displayText?.text = expressionSubstring
+        expression = ""
+        displayText?.text = ""
         textError?.text = ""
     }
 
