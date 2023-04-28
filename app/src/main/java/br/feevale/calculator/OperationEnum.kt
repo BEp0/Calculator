@@ -23,7 +23,7 @@ enum class OperationEnum(val type: String) : Calculate {
         override fun apply(expression: String): Double {
             val valuesToApplyOperation = expression.split("/")
             if(valuesToApplyOperation[1].toDouble() == 0.0){
-                throw RuntimeException("Não pode dividir por zero")
+                throw DivisionByZeroException()
             }
             return valuesToApplyOperation[0].toDouble() / valuesToApplyOperation[1].toDouble()
         }

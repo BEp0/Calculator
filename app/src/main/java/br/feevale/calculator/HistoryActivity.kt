@@ -8,8 +8,8 @@ import android.widget.TextView
 class HistoryActivity : AppCompatActivity() {
 
     var historyContent = ""
-    val line = "------------------------------"
     var historyText: TextView? = null
+    private val line = "------------------------------"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
